@@ -43,10 +43,14 @@ private:
 
 	struct QueueFamilyIndices {
 		std::optional<uint32_t> graphicsFamily;
+
+		bool isComplete() {
+			return graphicsFamily.has_value();
+		}
 	};
 
 
-	QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device) {
+	static QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device) {
 		QueueFamilyIndices indices;
 		// Logic to find queue family indices to populate struct with
 
@@ -61,6 +65,9 @@ private:
 			if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
 				indices.graphicsFamily = i;
 			}
+
+			if (indices.isComplete())
+				break;
 
 			i++;
 		}
@@ -89,20 +96,8 @@ private:
 	}
 
 	static bool isDeviceSuitable(VkPhysicalDevice device) {
-		VkPhysicalDeviceProperties deviceProperties;
-		vkGetPhysicalDeviceProperties(device, &deviceProperties);
-
-		VkPhysicalDeviceFeatures deviceFeatures;
-		vkGetPhysicalDeviceFeatures(device, &deviceFeatures);
-
-		VkPhysicalDeviceMemoryProperties deviceMemProperties;
-		vkGetPhysicalDeviceMemoryProperties(device, &deviceMemProperties);
-
-		std::cout << "Memory heap: " << deviceMemProperties.memoryHeapCount << std::endl;
-		std::cout << "Memory size: " << deviceMemProperties.memoryHeaps[0].size << std::endl;
-
-		return deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU &&
-			deviceFeatures.geometryShader;
+		QueueFamilyIndices indices = findQueueFamilies(device);
+		return indices.isComplete();
 	}
 
 	void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo) {
