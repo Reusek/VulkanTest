@@ -1,0 +1,9 @@
+[submodule "libs/glfw"]
+	path = libs/glfw
+	url = git@github.com:glfw/glfw.git
+[submodule "libs/glm"]
+	path = libs/glm
+	url = git@github.com:g-truc/glm.git
+[submodule "libs/Vulkan-Loader"]
+	path = libs/Vulkan-Loader
+	url = git@github.com:KhronosGroup/Vulkan-Loader.git
